@@ -72,8 +72,8 @@ with open(csv_path, 'a', newline='') as f:
     mel_features = extract_basic_features(melodic, sr)
     amb_features = extract_basic_features(ambient, sr)
 
-    writer.writerow(['_', 'melodic'] + mel_features)
-    writer.writerow(['_', 'ambient'] + amb_features)
+    # writer.writerow(['_', 'melodic'] + mel_features)
+    # writer.writerow(['_', 'ambient'] + amb_features)
     # writer.writerow(['new', 'row', 'of', 'values'])
 
 
