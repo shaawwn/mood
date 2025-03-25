@@ -1,3 +1,5 @@
 /audio
+/processed_files
+/unprocessed_files
 
 /data/custom.csv
