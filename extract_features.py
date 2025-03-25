@@ -1,6 +1,8 @@
 import librosa
 import numpy as np
 import csv
+import os
+import shutil
 
 
 # extract basic audio features and records to a csv
@@ -12,11 +14,24 @@ mfcc_mean, mfcc_std,mfcc_1,mfcc_2,mfcc_3,mfcc_4,mfcc_5,mfcc_6,mfcc_7,mfcc_8,mfcc
 
 '''
 
-csv_path = './data/custom.csv'
+
+
+# hardcode in files to process
 melodic_file = './audio/melodic.mp3'
 ambient_file = './audio/ambient.mp3'
+
+
+# run script to process files from folders
+UNPROCESSED_DIR = './audio/unprocessed'
+PROCESSED_DIR = './audio/processed'
+
+CSV_PATH = './data/custom.csv'
+
 FRAME_SIZE = 1024
 HOP_SIZE=512
+
+
+
 
 def extract_basic_features(signal, sr):
     '''
@@ -60,23 +75,50 @@ def extract_mfcss(signal, sr):
     return True
 
 
-with open(csv_path, 'a', newline='') as f:
-    writer = csv.writer(f)
 
-    # for now, add ph values for artist/track
+def extract_audio_features(file):
+    '''
+    extract all the audio featrures from the given files
+    '''
 
-    melodic,sr = librosa.load(melodic_file)
-    ambient,_ = librosa.load(ambient_file)
+    with open(CSV_PATH, 'a', newline='') as f:
+        writer = csv.writer(f)
+
+        # for now, add ph values for artist/track
+        signal, sr = librosa.load(file)
+
+        # OK
+        base_features = extract_basic_features(signal,sr)
+        print(file, base_features, "\n")
+
+        # Add additional features
 
 
-    mel_features = extract_basic_features(melodic, sr)
-    amb_features = extract_basic_features(ambient, sr)
 
-    # writer.writerow(['_', 'melodic'] + mel_features)
-    # writer.writerow(['_', 'ambient'] + amb_features)
-    # writer.writerow(['new', 'row', 'of', 'values'])
-
+        # Write features to CSV
+        # writer.writerow(['_', 'melodic'] + mel_features)
+        # writer.writerow(['_', 'ambient'] + amb_features)
+        # writer.writerow(['new', 'row', 'of', 'values'])
 
 
 
-print("Hello feature extraction")
+# uncomment whichever one needs to be done
+
+
+# hardcoded files
+files = [melodic_file, ambient_file]
+# for file in files:
+#     extract_audio_features(file)
+
+
+# files from directory
+for filename in os.listdir(UNPROCESSED_DIR):
+    filepath = os.path.join(UNPROCESSED_DIR, filename)
+    print(filename)
+
+    # features = extract_audio_features(filepath)
+
+    # after extraction, move to processed folder
+    # shutil.move(filepath, os.path.join(PROCESSED_DIR, filename))
+
+
